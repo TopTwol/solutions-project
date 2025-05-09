@@ -48,23 +48,15 @@
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      padding: 8px 12px;
-      background: rgba(0,0,0,0.5);
-      border-radius: 8px;
-      backdrop-filter: blur(6px);
       font-size: 1rem;
       color: #ddd;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       transition: transform 0.1s ease;
     }
     .key-icon img {
-      width: 28px;
+      width: 1em;
       height: auto;
-      margin: 0 8px;
-      border: 1px solid rgba(255,255,255,0.6);
-      border-radius: 4px;
-      padding: 2px;
-      background: rgba(255,255,255,0.1);
+      margin: 0 0.25em;
+      filter: grayscale(100%) brightness(80%);
     }
     .key-icon.active {
       transform: translateX(-50%) scale(1.1);
