@@ -248,7 +248,7 @@
                     title: "Get Involved & Advocate",
                     content: "<p>Everyone has a role to play in promoting better school nutrition:</p><ul><li><strong>Parents:</strong> Advocate at your local school board, participate in wellness committees, model healthy eating at home.</li><li><strong>Students:</strong> Voice your preferences for healthier foods, start or join a school wellness club, be curious about food.</li><li><strong>Educators:</strong> Integrate nutrition education into lessons, create a supportive environment for healthy choices.</li><li><strong>Community Members:</strong> Support local farms that supply schools, volunteer for school garden projects, contact policymakers about school nutrition funding and standards.</li></ul><p>Together, we can ensure all students have access to the nutritious food they need to thrive academically and physically.</p>"
                 },
-                { // New "Thank You" slide
+                { 
                     title: "Thank You!",
                     content: "<p>Thank you for taking the time to view our presentation on the critical issue of school nutrition. We hope it has been informative and inspires action towards healthier futures for our students.</p><p>Your attention and engagement are greatly appreciated.</p><hr><p class='credits'>A project by Boston Thueson & Bryton Rowberry.</p>"
                 }
@@ -322,7 +322,7 @@
             function startCountdown() {
                 if (countdownInterval) clearInterval(countdownInterval);
                 countdownOverlay.style.display = 'block';
-                let count = 8;
+                let count = 8; // <-- THIS IS THE CHANGED VALUE
                 countdownOverlay.textContent = `Starting over in ${count}s...`;
 
                 countdownInterval = setInterval(() => {
