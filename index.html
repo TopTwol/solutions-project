@@ -1,129 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solutions Project: School Nutrition</title>
-  <style>
-    /* Reset & base */
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(135deg, #1f1c2c, #928dab);
-      color: #e0e0e0;
-      overflow: hidden;
-      height: 100vh;
-      position: relative;
-    }
-    .section {
-      position: absolute;
-      width: 80vw;
-      max-width: 800px;
-      top: 50%; left: 50%;
-      transform: translate(-50%, 20px);
-      padding: 40px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 16px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-      opacity: 0;
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .section.active {
-      opacity: 1;
-      transform: translate(-50%, -50%);
-    }
-    /* Headings */
-    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #f0f0f0; }
-    h2 { font-size: 1.75rem; margin-top: 1rem; margin-bottom: 1rem; color: #d0d0d0; }
-    p  { font-size: 1.05rem; line-height: 1.6; margin-bottom: 1rem; }
-    /* Progress bar */
-    .progress-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 8px; background: rgba(0,0,0,0.4); }
-    .progress-bar      { width: 0%; height: 100%; background: #76c7c0; transition: width 0.4s ease; }
-    /* Persistent Space Key Prompt */
-    .key-icon {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      font-size: 1rem;
-      color: #ddd;
-      transition: transform 0.1s ease;
-    }
-    .key-icon img {
-      width: 1em;
-      height: auto;
-      margin: 0 0.25em;
-      filter: grayscale(100%) brightness(80%);
-    }
-    .key-icon.active {
-      transform: translateX(-50%) scale(1.1);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Nutrition Presentation</title>
+    <style>
+        :root {
+            --slide-transition-duration: 0.6s;
+            --card-animation-duration: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #f0f0f0;
+        }
+
+        #presentation-viewport {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #track {
+            display: flex;
+            height: 100%;
+            /* Width set by JS: (numRealSlides + 2) * 100% */
+            position: relative;
+            background: linear-gradient(
+                to right, 
+                #0F2027, /* Midnight */
+                #203A43, /* Dark Slate */
+                #2C5364, /* Charcoal Blue */
+                #1a2a3a, /* Darker Navy */
+                #223344, /* Muted Blue/Grey */
+                #0b1828, /* Even Darker Midnight */
+                #1f303f, /* Deeper Slate */
+                #0F2027, /* Repeat Midnight */
+                #203A43  /* Repeat Dark Slate */
+            );
+            transition: transform var(--slide-transition-duration) ease-in-out;
+        }
+
+        .slide {
+            width: 100vw; /* Each slide takes full viewport width */
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .slide-card {
+            background-color: rgba(10, 10, 20, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 30px 35px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
+            
+            width: 65%;
+            max-width: 700px;
+            min-width: 300px;
+            max-height: 75vh;
+            overflow-y: auto;
+
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: opacity var(--card-animation-duration) ease-out, transform var(--card-animation-duration) ease-out;
+        }
+
+        .slide-card.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .slide-card h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            color: #e0e8ff;
+        }
+
+        .slide-card p, .slide-card li {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .slide-card ul {
+            list-style-position: outside;
+            padding-left: 25px;
+        }
+
+        .slide-card strong {
+            color: #aaccff;
+        }
+
+        .slide-card hr {
+            border: none;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.15);
+            margin: 25px 0;
+        }
+
+        .slide-card .credits {
+            font-size: 0.9em;
+            text-align: center;
+            color: #b0c0e0;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+
+        .slide-card::-webkit-scrollbar {
+            width: 8px;
+        }
+        .slide-card::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        .slide-card::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+        .slide-card::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+
+        #controls {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(20, 20, 30, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 12px 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        #progress-bar-container {
+            width: 150px;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background-color: #c0d0ff;
+            border-radius: 4px;
+            transition: width 0.4s ease-out;
+        }
+
+        #controls p {
+            font-size: 0.9em;
+            color: #d0d8e8;
+        }
+
+        #controls kbd {
+            background-color: #333a4f;
+            padding: 3px 7px;
+            border-radius: 4px;
+            border: 1px solid #4a5269;
+            font-family: "SF Mono", "Menlo", "Monaco", monospace;
+            font-size: 0.95em;
+        }
+
+        #countdown-overlay {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            display: none;
+            z-index: 90;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+    </style>
 </head>
 <body>
-  <!-- Content Sections -->
-  <div class="section active" id="section-0">
-    <h1>The Problem</h1>
-    <h2>Context</h2>
-    <p>Throughout Utah, high school lunches often lack sufficient nutrition. Despite existing programs, many students remain hungry or miss essential nutrients.</p>
-  </div>
-  <div class="section" id="section-1">
-    <h2>Contributing Factors</h2>
-    <p>1. Small portion sizes and limited menu variety.</p>
-    <p>2. Budget constraints push schools towards cheaper, processed foods.</p>
-  </div>
-  <div class="section" id="section-2">
-    <h2>Consequences</h2>
-    <p>Poor nutrition can lead to low energy, decreased focus in class, and increased risk of obesity and chronic diseases over time.</p>
-  </div>
-  <div class="section" id="section-3">
-    <h1>The Solution</h1>
-    <h2>Organizations Involved</h2>
-    <p><strong>BMC Public Health:</strong> Implements nutrition education and supportive environments in schools (Teo et al.).</p>
-    <p><strong>Journal of School Health:</strong> Enforces policies to limit junk food and increase healthy options (Merlo et al.).</p>
-  </div>
-  <div class="section" id="section-4">
-    <h2>How Can We Help?</h2>
-    <p>- Start or join a student wellness/nutrition club.</p>
-    <p>- Volunteer at local food banks or school garden projects.</p>
-    <p>- Advocate for policy changes in school board meetings.</p>
-  </div>
-  <div class="section" id="section-5">
-    <h1>Thank You!</h1>
-    <p>You've reached the end of the presentation.</p>
-  </div>
-  <!-- Progress Bar -->
-  <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
-  <!-- Persistent Space Key Prompt -->
-  <div class="key-icon" id="key-icon">
-    press <img src="Space Bar.png" alt="Space Bar Icon"/> to move to next slide
-  </div>
-  <!-- JS Navigation & Animation -->
-  <script>
-    const sections = document.querySelectorAll('.section');
-    const total = sections.length;
-    let currentIndex = 0;
-    const progressBar = document.getElementById('progress-bar');
-    const keyIcon = document.getElementById('key-icon');
-    function showSection(i) {
-      sections.forEach(s => s.classList.remove('active'));
-      sections[i].classList.add('active');
-      const pct = Math.round(((i+1)/total)*100);
-      progressBar.style.width = pct + '%';
-    }
-    document.body.addEventListener('keydown', e => {
-      if (e.code === 'Space') {
-        e.preventDefault();
-        keyIcon.classList.add('active');
-        setTimeout(() => keyIcon.classList.remove('active'), 100);
-        currentIndex = (currentIndex + 1) % total;
-        showSection(currentIndex);
-      }
-    });
-    showSection(currentIndex);
-  </script>
+    <div id="presentation-viewport">
+        <div id="track">
+            <!-- Slides will be populated by JS -->
+        </div>
+    </div>
+
+    <div id="controls">
+        <div id="progress-bar-container">
+            <div id="progress-bar-fill"></div>
+        </div>
+        <p>Press <kbd>SPACE</kbd> to continue</p>
+    </div>
+
+    <div id="countdown-overlay"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const track = document.getElementById('track');
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const countdownOverlay = document.getElementById('countdown-overlay');
+
+            const slideContents = [
+                {
+                    title: "The Challenge of School Nutrition",
+                    content: "<p>Millions of students rely on school meals daily. However, the nutritional quality can vary significantly, posing risks to student health and development. Ensuring access to balanced, wholesome food at school is a critical public health issue.</p><p>This presentation explores the complexities of school nutrition, its impact, and pathways to improvement for every student in our communities.</p>"
+                },
+                {
+                    title: "Impact on Learning & Health",
+                    content: "<p>Nutrition is intrinsically linked to cognitive function and physical well-being. Poor diets can lead to:</p><ul><li>Decreased concentration and attention span</li><li>Behavioral problems in the classroom</li><li>Lower academic achievement</li><li>Increased risk of obesity and chronic diseases like type 2 diabetes</li></ul><p>Conversely, well-nourished students are more engaged, energetic, and ready to learn effectively.</p>"
+                },
+                {
+                    title: "Key Nutrients Often Missing",
+                    content: "<p>School meals should prioritize nutrient-dense foods. Common deficiencies include:</p><ul><li><strong>Fruits & Vegetables:</strong> Essential for vitamins, minerals, and fiber. Aim for a variety of colors.</li><li><strong>Whole Grains:</strong> Provide sustained energy and fiber, often replaced by refined grains.</li><li><strong>Lean Proteins:</strong> Crucial for growth and development; limit processed meats.</li><li><strong>Healthy Fats:</strong> Important for brain health (e.g., avocados, nuts - allergy permitting, fish).</li></ul><p>Reducing added sugars, excessive sodium, and unhealthy saturated fats is equally important for long-term health.</p>"
+                },
+                {
+                    title: "Solutions: Policy & Practice",
+                    content: "<p>Improving school nutrition requires a multi-faceted approach:</p><ul><li><strong>Stronger Federal Standards:</strong> Updating and enforcing nutrition guidelines for all school foods, including vending machines.</li><li><strong>Local School Initiatives:</strong> Farm-to-school programs, school gardens, scratch cooking, and comprehensive nutrition education.</li><li><strong>Menu Planning:</strong> Creative, culturally diverse, and appealing menus that meet nutritional targets.</li><li><strong>Adequate Funding & Resources:</strong> Ensuring schools have resources for healthier ingredients, kitchen equipment, and trained staff.</li><li><strong>Community Engagement:</strong> Involving parents, students, and local health experts in decision-making processes.</li></ul>"
+                },
+                {
+                    title: "Success Stories & Best Practices",
+                    content: "<p>Many schools and districts are making significant strides:</p><ul><li><strong>\"Salad Bar First\" initiatives:</strong> Encouraging fruit and vegetable consumption by making them appealing and accessible.</li><li><strong>Chef collaborations:</strong> Bringing culinary expertise to school kitchens to create healthier, tastier meals.</li><li><strong>Student taste tests and feedback loops:</strong> Involving students in choosing and refining healthier options.</li><li><strong>Eliminating sugary drinks and competitive unhealthy foods from school grounds.</strong></li><li><strong>Comprehensive wellness policies</strong> that integrate nutrition education across the curriculum and promote physical activity.</li></ul><p>These examples show that positive change is achievable with commitment and innovation.</p>"
+                },
+                {
+                    title: "Get Involved & Advocate",
+                    content: "<p>Everyone has a role to play in promoting better school nutrition:</p><ul><li><strong>Parents:</strong> Advocate at your local school board, participate in wellness committees, model healthy eating at home.</li><li><strong>Students:</strong> Voice your preferences for healthier foods, start or join a school wellness club, be curious about food.</li><li><strong>Educators:</strong> Integrate nutrition education into lessons, create a supportive environment for healthy choices.</li><li><strong>Community Members:</strong> Support local farms that supply schools, volunteer for school garden projects, contact policymakers about school nutrition funding and standards.</li></ul><p>Together, we can ensure all students have access to the nutritious food they need to thrive academically and physically.</p>"
+                },
+                { // New "Thank You" slide
+                    title: "Thank You!",
+                    content: "<p>Thank you for taking the time to view our presentation on the critical issue of school nutrition. We hope it has been informative and inspires action towards healthier futures for our students.</p><p>Your attention and engagement are greatly appreciated.</p><hr><p class='credits'>A project by Boston Thueson & Bryton Rowberry.</p>"
+                }
+            ];
+
+            const numRealSlides = slideContents.length;
+            let slides = []; 
+
+            slideContents.forEach(data => {
+                const slideCard = document.createElement('div');
+                slideCard.className = 'slide-card';
+                slideCard.innerHTML = `<h2>${data.title}</h2>${data.content}`;
+                
+                const slide = document.createElement('div');
+                slide.className = 'slide';
+                slide.appendChild(slideCard);
+                track.appendChild(slide);
+                slides.push(slide);
+            });
+
+            const firstSlideClone = slides[0].cloneNode(true);
+            const lastSlideClone = slides[numRealSlides - 1].cloneNode(true);
+            
+            track.appendChild(firstSlideClone);
+            track.insertBefore(lastSlideClone, slides[0]);
+
+            slides = Array.from(track.querySelectorAll('.slide'));
+            const totalSlidesInTrack = slides.length;
+
+            track.style.width = `${totalSlidesInTrack * 100}%`;
+            slides.forEach(s => s.style.flex = `0 0 ${100 / totalSlidesInTrack}%`);
+            
+            let currentIndex = 1; 
+            let isAnimating = false;
+            let isJumping = false;
+            let countdownInterval = null;
+            const trackTransitionStyle = `transform ${getComputedStyle(document.documentElement).getPropertyValue('--slide-transition-duration')} ease-in-out`;
+
+
+            function updateActiveCard() {
+                slides.forEach((slide, index) => {
+                    const card = slide.querySelector('.slide-card');
+                    if (index === currentIndex) {
+                        card.classList.add('active');
+                    } else {
+                        card.classList.remove('active');
+                    }
+                });
+            }
+
+            function setInitialPosition() {
+                track.style.transition = 'none';
+                track.style.transform = `translateX(${-100 / totalSlidesInTrack * currentIndex}%)`;
+                track.offsetHeight; 
+                track.style.transition = trackTransitionStyle;
+                updateActiveCard();
+                updateProgressBar();
+            }
+
+            function updateProgressBar() {
+                let effectiveIndex = currentIndex;
+                if (currentIndex === 0) { 
+                    effectiveIndex = numRealSlides;
+                } else if (currentIndex === totalSlidesInTrack - 1) { 
+                    effectiveIndex = 1;
+                }
+                const progress = (effectiveIndex / numRealSlides) * 100;
+                progressBarFill.style.width = `${progress}%`;
+            }
+            
+            function startCountdown() {
+                if (countdownInterval) clearInterval(countdownInterval);
+                countdownOverlay.style.display = 'block';
+                let count = 5;
+                countdownOverlay.textContent = `Starting over in ${count}s...`;
+
+                countdownInterval = setInterval(() => {
+                    count--;
+                    if (count > 0) {
+                        countdownOverlay.textContent = `Starting over in ${count}s...`;
+                    } else if (count === 0) {
+                        countdownOverlay.textContent = `Starting over now...`;
+                    } else { 
+                        clearInterval(countdownInterval);
+                        countdownInterval = null;
+                        countdownOverlay.style.display = 'none';
+                        
+                        if (!isAnimating) {
+                            isAnimating = true; 
+                            slides[currentIndex].querySelector('.slide-card').classList.remove('active');
+                            
+                            currentIndex++; 
+                            track.style.transform = `translateX(${-100 / totalSlidesInTrack * currentIndex}%)`;
+                        }
+                    }
+                }, 1000);
+            }
+
+            function hideCountdown() {
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
+                countdownOverlay.style.display = 'none';
+            }
+
+            track.addEventListener('transitionend', () => {
+                if (isJumping) {
+                    isJumping = false;
+                    track.style.transition = trackTransitionStyle;
+                }
+
+                if (currentIndex === 0) { 
+                    currentIndex = numRealSlides; 
+                    isJumping = true;
+                    track.style.transition = 'none';
+                    track.style.transform = `translateX(${-100 / totalSlidesInTrack * currentIndex}%)`;
+                    track.offsetHeight; 
+                } else if (currentIndex === totalSlidesInTrack - 1) { 
+                    currentIndex = 1;
+                    isJumping = true;
+                    track.style.transition = 'none';
+                    track.style.transform = `translateX(${-100 / totalSlidesInTrack * currentIndex}%)`;
+                    track.offsetHeight; 
+                }
+                
+                updateActiveCard(); 
+                updateProgressBar();
+                isAnimating = false;
+
+                if (currentIndex === numRealSlides) { 
+                    startCountdown();
+                } else {
+                    hideCountdown();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.code === 'Space' && !isAnimating) {
+                    isAnimating = true;
+                    hideCountdown(); 
+
+                    slides[currentIndex].querySelector('.slide-card').classList.remove('active');
+                    
+                    currentIndex++;
+                    track.style.transform = `translateX(${-100 / totalSlidesInTrack * currentIndex}%)`;
+                }
+            });
+
+            setInitialPosition();
+        });
+    </script>
 </body>
 </html>
